@@ -1,863 +1,984 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Phong Mouse Gaming</title>
+<title>Phong Mouse Gaming</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #111827;
-      color: white;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+}
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: 30px auto;
-    }
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+}
 
-    .box {
-      background: #1f2937;
-      padding: 25px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-    }
+h1 {
+    text-align: center;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+.subtitle {
+    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 30px;
+}
 
-    h2 {
-      margin-top: 0;
-    }
+.products {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
 
-    .product {
-      background: #374151;
-      padding: 20px;
-      border-radius: 12px;
-    }
+.product {
+    background: #1f2937;
+    padding: 18px;
+    border-radius: 15px;
+}
 
-    .price {
-      font-size: 24px;
-      font-weight: bold;
-      color: #4ade80;
-    }
+.product img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: white;
+    border-radius: 10px;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
+.product h2 {
+    margin-bottom: 8px;
+}
 
-      border: none;
-      border-radius: 8px;
+.description {
+    color: #d1d5db;
+    min-height: 40px;
+}
 
-      background: #22c55e;
-      color: #052e16;
+.price {
+    color: #4ade80;
+    font-size: 23px;
+    font-weight: bold;
+}
 
-      font-size: 16px;
-      font-weight: bold;
+button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
 
-      cursor: pointer;
-    }
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+.box {
+    background: #1f2937;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 25px;
+}
 
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+.bank {
+    background: #172554;
+    padding: 20px;
+    border-radius: 12px;
+}
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 13px;
+.bank-number {
+    color: #60a5fa;
+    font-size: 27px;
+    font-weight: bold;
+}
 
-      margin-top: 10px;
+.order-code {
+    color: #facc15;
+    font-size: 22px;
+    font-weight: bold;
+    word-break: break-all;
+}
 
-      border: none;
-      border-radius: 8px;
+.status {
+    background: #374151;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
 
-      font-size: 16px;
-    }
+input, textarea {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+textarea {
+    min-height: 100px;
+}
 
-    .bank-box {
-      background: #172554;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 15px;
-    }
+.support {
+    text-align: center;
+    margin: 30px 0;
+    color: #d1d5db;
+}
 
-    .bank-number {
-      font-size: 26px;
-      font-weight: bold;
-      color: #60a5fa;
-    }
+.error {
+    color: #f87171;
+    margin-top: 10px;
+}
 
-    .order-code {
-      font-size: 22px;
-      font-weight: bold;
-      color: #facc15;
-      word-break: break-all;
-    }
-
-    .status {
-      background: #374151;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
-
-    .support {
-      text-align: center;
-      color: #d1d5db;
-      margin-top: 25px;
-    }
-
-    #paymentBox,
-    #shippingForm {
-      display: none;
-    }
-
-    .error {
-      color: #f87171;
-      margin-top: 10px;
-    }
-  </style>
+#paymentBox,
+#shippingForm {
+    display: none;
+}
+</style>
 </head>
-
 
 <body>
 
 <div class="container">
 
-  <h1>🖱️ Phong Mouse Gaming</h1>
+    <h1>🖱️ Phong Mouse Gaming</h1>
 
-
-  <!-- ========================= -->
-  <!-- SẢN PHẨM -->
-  <!-- ========================= -->
-
-  <div class="box">
-
-    <div class="product">
-
-      <h2>Gaming Mouse</h2>
-
-      <p>
-        Mã sản phẩm:
-        <b>MOUSE001</b>
-      </p>
-
-      <p class="price">
-        500.000đ
-      </p>
-
-      <button id="buyButton">
-        MUA NGAY
-      </button>
-
-      <div
-        id="buyError"
-        class="error">
-      </div>
-
+    <div class="subtitle">
+        Gaming Mouse Shop
     </div>
 
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- THANH TOÁN -->
-  <!-- ========================= -->
-
-  <div
-    class="box"
-    id="paymentBox">
-
-    <h2>💳 Thanh toán</h2>
-
-    <p>
-      Chuyển khoản theo thông tin bên dưới:
-    </p>
-
-
-    <div class="bank-box">
-
-      <p>Ngân hàng</p>
-
-      <h2>MB Bank</h2>
-
-
-      <p>Số tài khoản</p>
-
-      <div class="bank-number">
-        0775362780
-      </div>
-
-
-      <p>Nội dung chuyển khoản</p>
-
-      <div
-        class="order-code"
-        id="orderCode">
-      </div>
-
-    </div>
-
-
+    <!-- DANH SÁCH CHUỘT -->
     <div
-      class="status"
-      id="status">
-
-      ⏳ Đang chờ người bán xác nhận thanh toán...
-
+        id="products"
+        class="products">
+        Đang tải sản phẩm...
     </div>
 
-  </div>
 
-
-  <!-- ========================= -->
-  <!-- FORM NHẬN HÀNG -->
-  <!-- ========================= -->
-
-  <div
-    class="box"
-    id="shippingForm">
-
-    <h2>
-      📦 Thông tin nhận hàng
-    </h2>
-
-    <p>
-      Thanh toán đã được xác nhận.
-      Hãy nhập thông tin để người bán giao hàng.
-    </p>
-
-
-    <input
-      id="customerName"
-      type="text"
-      maxlength="100"
-      placeholder="Họ và tên">
-
-
-    <input
-      id="phone"
-      type="tel"
-      maxlength="20"
-      placeholder="Số điện thoại">
-
-
-    <textarea
-      id="address"
-      maxlength="500"
-      placeholder="Địa chỉ nhận hàng"></textarea>
-
-
-    <button id="sendShipping">
-      GỬI THÔNG TIN
-    </button>
-
+    <!-- THANH TOÁN -->
     <div
-      id="shippingError"
-      class="error">
+        id="paymentBox"
+        class="box">
+
+        <h2>💳 Thanh toán</h2>
+
+        <p>
+            Sản phẩm:
+            <b id="selectedProduct"></b>
+        </p>
+
+        <p>
+            Số tiền:
+            <b id="selectedPrice"></b>
+        </p>
+
+        <div class="bank">
+
+            <p>Ngân hàng</p>
+
+            <h2>MB Bank</h2>
+
+            <p>Số tài khoản</p>
+
+            <div class="bank-number">
+                0775362780
+            </div>
+
+            <p>Nội dung chuyển khoản</p>
+
+            <div
+                id="orderCode"
+                class="order-code">
+            </div>
+
+        </div>
+
+        <div
+            id="status"
+            class="status">
+
+            ⏳ Đang chờ người bán xác nhận thanh toán...
+
+        </div>
+
     </div>
 
-  </div>
+
+    <!-- FORM NHẬN HÀNG -->
+    <div
+        id="shippingForm"
+        class="box">
+
+        <h2>📦 Thông tin nhận hàng</h2>
+
+        <p>
+            Thanh toán đã được xác nhận.
+            Nhập thông tin nhận hàng bên dưới.
+        </p>
+
+        <input
+            id="customerName"
+            maxlength="100"
+            placeholder="Họ và tên">
+
+        <input
+            id="phone"
+            type="tel"
+            maxlength="20"
+            placeholder="Số điện thoại">
+
+        <textarea
+            id="address"
+            maxlength="500"
+            placeholder="Địa chỉ nhận hàng"></textarea>
+
+        <button id="sendShipping">
+            GỬI THÔNG TIN
+        </button>
+
+        <div
+            id="shippingError"
+            class="error">
+        </div>
+
+    </div>
 
 
-  <!-- ========================= -->
-  <!-- HỖ TRỢ -->
-  <!-- ========================= -->
-
-  <div class="support">
-
-    ☎️ Hỗ trợ:
-    <b>0775362780</b>
-
-  </div>
+    <div class="support">
+        ☎️ Hỗ trợ:
+        <b>0775362780</b>
+    </div>
 
 </div>
 
 
-
 <script type="module">
 
-  // ==================================================
-  // 1. IMPORT FIREBASE
-  // ==================================================
+// ==========================================
+// FIREBASE
+// ==========================================
 
-  import {
+import {
     initializeApp
-  } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 
-  import {
+import {
     getFirestore,
+    collection,
+    onSnapshot,
     doc,
     setDoc,
     updateDoc,
-    onSnapshot,
     serverTimestamp
-  } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
-  import {
+import {
     getAuth,
     signInAnonymously
-  } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 
+// ==========================================
+// CONFIG
+// ==========================================
 
-  // ==================================================
-  // 2. FIREBASE CONFIG CỦA M
-  // ==================================================
-
-  const firebaseConfig = {
+const firebaseConfig = {
 
     apiKey:
-      "AIzaSyCKyvsdwOu2-cIYzVQA7bEBbUkfG1jQGlo",
+        "AIzaSyCKyvsdwOu2-cIYzVQA7bEBbUkfG1jQGlo",
 
     authDomain:
-      "phong-mouse-gaming.firebaseapp.com",
+        "phong-mouse-gaming.firebaseapp.com",
 
     projectId:
-      "phong-mouse-gaming",
+        "phong-mouse-gaming",
 
     storageBucket:
-      "phong-mouse-gaming.firebasestorage.app",
+        "phong-mouse-gaming.firebasestorage.app",
 
     messagingSenderId:
-      "900019788297",
+        "900019788297",
 
     appId:
-      "1:900019788297:web:9dfb15fcae7e1e8291f6d8",
+        "1:900019788297:web:9dfb15fcae7e1e8291f6d8",
 
     measurementId:
-      "G-MHRJYMFN8B"
-  };
+        "G-MHRJYMFN8B"
+};
 
 
+const app =
+    initializeApp(firebaseConfig);
 
-  // ==================================================
-  // 3. KHỞI ĐỘNG FIREBASE
-  // ==================================================
+const db =
+    getFirestore(app);
 
-  const app = initializeApp(firebaseConfig);
-
-  const db = getFirestore(app);
-
-  const auth = getAuth(app);
+const auth =
+    getAuth(app);
 
 
+let currentOrderId = null;
 
-  // ==================================================
-  // 4. CÁC BIẾN
-  // ==================================================
-
-  let currentOrderId = null;
-
-  let unsubscribeOrder = null;
+let unsubscribeOrder = null;
 
 
+// ==========================================
+// ĐĂNG NHẬP KHÁCH
+// ==========================================
 
-  // ==================================================
-  // 5. ĐĂNG NHẬP KHÁCH ẨN DANH
-  // ==================================================
-
-  try {
+try {
 
     await signInAnonymously(auth);
 
-    console.log(
-      "Đăng nhập khách thành công:",
-      auth.currentUser.uid
-    );
-
-  }
-
-  catch (error) {
+}
+catch (error) {
 
     console.error(error);
 
-    document.getElementById(
-      "buyError"
-    ).textContent =
-      "Không thể kết nối Firebase.";
+    document
+    .getElementById("products")
+    .textContent =
+        "Không kết nối được hệ thống.";
 
-  }
+}
 
 
+// ==========================================
+// LOAD SẢN PHẨM
+// ==========================================
 
-  // ==================================================
-  // 6. TẠO MÃ ĐƠN
-  // ==================================================
+onSnapshot(
 
-  function createOrderCode() {
+    collection(
+        db,
+        "products"
+    ),
 
-    const randomPart =
-      crypto.randomUUID()
+    snapshot => {
+
+        const box =
+            document
+            .getElementById("products");
+
+        box.innerHTML = "";
+
+
+        let activeCount = 0;
+
+
+        snapshot.forEach(
+            productDocument => {
+
+                const data =
+                    productDocument.data();
+
+
+                // Sản phẩm bị ẩn
+                if (
+                    data.active === false
+                ) {
+                    return;
+                }
+
+
+                activeCount++;
+
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+                item.className =
+                    "product";
+
+
+                // ẢNH
+                if (data.image) {
+
+                    const image =
+                        document.createElement(
+                            "img"
+                        );
+
+                    image.src =
+                        data.image;
+
+                    image.alt =
+                        data.name || "Chuột";
+
+                    item.appendChild(
+                        image
+                    );
+
+                }
+
+
+                // TÊN
+                const name =
+                    document.createElement(
+                        "h2"
+                    );
+
+                name.textContent =
+                    data.name || "Gaming Mouse";
+
+                item.appendChild(name);
+
+
+                // MÃ
+                const code =
+                    document.createElement(
+                        "p"
+                    );
+
+                code.textContent =
+                    "Mã: " +
+                    (data.code || "");
+
+                item.appendChild(code);
+
+
+                // MÔ TẢ
+                if (data.description) {
+
+                    const description =
+                        document.createElement(
+                            "p"
+                        );
+
+                    description.className =
+                        "description";
+
+                    description.textContent =
+                        data.description;
+
+                    item.appendChild(
+                        description
+                    );
+
+                }
+
+
+                // GIÁ
+                const price =
+                    document.createElement(
+                        "p"
+                    );
+
+                price.className =
+                    "price";
+
+                price.textContent =
+                    Number(
+                        data.price || 0
+                    ).toLocaleString(
+                        "vi-VN"
+                    )
+                    + "đ";
+
+                item.appendChild(price);
+
+
+                // NÚT MUA
+                const buy =
+                    document.createElement(
+                        "button"
+                    );
+
+                buy.textContent =
+                    "MUA NGAY";
+
+
+                buy.onclick =
+                    () => createOrder(
+                        productDocument.id,
+                        data
+                    );
+
+
+                item.appendChild(buy);
+
+
+                box.appendChild(item);
+
+            }
+        );
+
+
+        if (
+            activeCount === 0
+        ) {
+
+            box.innerHTML =
+                "Hiện chưa có sản phẩm.";
+
+        }
+
+    },
+
+    error => {
+
+        console.error(error);
+
+        document
+        .getElementById("products")
+        .textContent =
+            "Không tải được sản phẩm.";
+
+    }
+
+);
+
+
+// ==========================================
+// TẠO MÃ ĐƠN
+// ==========================================
+
+function createOrderCode(
+    productCode
+) {
+
+    const random =
+        crypto
+        .randomUUID()
         .replaceAll("-", "")
         .substring(0, 8)
         .toUpperCase();
 
-    return "MOUSE001-" + randomPart;
-  }
+
+    return (
+        productCode +
+        "-" +
+        random
+    );
+
+}
 
 
+// ==========================================
+// TẠO ĐƠN
+// ==========================================
 
-  // ==================================================
-  // 7. KHÁCH BẤM MUA NGAY
-  // ==================================================
+async function createOrder(
+    productId,
+    product
+) {
 
-  document
-    .getElementById("buyButton")
-    .addEventListener(
-      "click",
-      async () => {
+    if (!auth.currentUser) {
 
-        const buyButton =
-          document.getElementById(
-            "buyButton"
-          );
+        alert(
+            "Chưa kết nối được tài khoản khách."
+        );
+
+        return;
+
+    }
+
+
+    if (currentOrderId) {
+
+        alert(
+            "M đã có một đơn đang xử lý trên trang này."
+        );
+
+        return;
+
+    }
+
+
+    const orderCode =
+        createOrderCode(
+            product.code
+        );
+
+
+    currentOrderId =
+        orderCode;
+
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "orders",
+                orderCode
+            ),
+
+            {
+
+                orderCode:
+                    orderCode,
+
+                productId:
+                    productId,
+
+                productCode:
+                    product.code,
+
+                productName:
+                    product.name,
+
+                price:
+                    Number(
+                        product.price
+                    ),
+
+                customerUid:
+                    auth.currentUser.uid,
+
+                status:
+                    "waiting_payment",
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+
+        );
+
+
+        // HIỆN THANH TOÁN
+
+        document
+        .getElementById(
+            "selectedProduct"
+        )
+        .textContent =
+            product.name;
+
+
+        document
+        .getElementById(
+            "selectedPrice"
+        )
+        .textContent =
+            Number(
+                product.price
+            ).toLocaleString(
+                "vi-VN"
+            )
+            + "đ";
+
+
+        document
+        .getElementById(
+            "orderCode"
+        )
+        .textContent =
+            orderCode;
+
+
+        document
+        .getElementById(
+            "paymentBox"
+        )
+        .style.display =
+            "block";
+
+
+        document
+        .getElementById(
+            "status"
+        )
+        .textContent =
+            "⏳ Đang chờ người bán xác nhận thanh toán...";
+
+
+        document
+        .getElementById(
+            "paymentBox"
+        )
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+        watchOrder();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        currentOrderId = null;
+
+        alert(
+            "Không tạo được đơn hàng."
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// THEO DÕI ĐƠN
+// ==========================================
+
+function watchOrder() {
+
+    if (!currentOrderId)
+        return;
+
+
+    if (unsubscribeOrder) {
+
+        unsubscribeOrder();
+
+    }
+
+
+    unsubscribeOrder =
+        onSnapshot(
+
+            doc(
+                db,
+                "orders",
+                currentOrderId
+            ),
+
+            snapshot => {
+
+                if (!snapshot.exists())
+                    return;
+
+
+                const data =
+                    snapshot.data();
+
+
+                // ADMIN XÁC NHẬN TIỀN
+
+                if (
+                    data.status ===
+                    "paid"
+                ) {
+
+                    document
+                    .getElementById(
+                        "status"
+                    )
+                    .textContent =
+                        "✅ Thanh toán đã được xác nhận!";
+
+
+                    document
+                    .getElementById(
+                        "shippingForm"
+                    )
+                    .style.display =
+                        "block";
+
+                }
+
+
+                // KHÁCH ĐÃ GỬI FORM
+
+                if (
+                    data.status ===
+                    "shipping_info_submitted"
+                ) {
+
+                    document
+                    .getElementById(
+                        "status"
+                    )
+                    .textContent =
+                        "📦 Đã gửi thông tin nhận hàng thành công.";
+
+
+                    document
+                    .getElementById(
+                        "shippingForm"
+                    )
+                    .style.display =
+                        "none";
+
+                }
+
+            },
+
+            error => {
+
+                console.error(error);
+
+            }
+
+        );
+
+}
+
+
+// ==========================================
+// GỬI THÔNG TIN GIAO HÀNG
+// ==========================================
+
+document
+.getElementById(
+    "sendShipping"
+)
+.addEventListener(
+    "click",
+    async () => {
+
+        const name =
+            document
+            .getElementById(
+                "customerName"
+            )
+            .value.trim();
+
+
+        const phone =
+            document
+            .getElementById(
+                "phone"
+            )
+            .value.trim();
+
+
+        const address =
+            document
+            .getElementById(
+                "address"
+            )
+            .value.trim();
+
 
         const errorBox =
-          document.getElementById(
-            "buyError"
-          );
+            document
+            .getElementById(
+                "shippingError"
+            );
 
 
         errorBox.textContent = "";
 
 
-        if (!auth.currentUser) {
+        if (
+            !name ||
+            !phone ||
+            !address
+        ) {
 
-          errorBox.textContent =
-            "Chưa kết nối được tài khoản khách.";
+            errorBox.textContent =
+                "Nhập đầy đủ họ tên, SĐT và địa chỉ.";
 
-          return;
-        }
-
-
-        buyButton.disabled = true;
-
-        buyButton.textContent =
-          "ĐANG TẠO ĐƠN...";
-
-
-        try {
-
-          // ------------------------------
-          // Tạo mã đơn riêng
-          // ------------------------------
-
-          const orderCode =
-            createOrderCode();
-
-
-          currentOrderId =
-            orderCode;
-
-
-          // ------------------------------
-          // Lưu đơn vào Firestore
-          // ------------------------------
-
-          await setDoc(
-
-            doc(
-              db,
-              "orders",
-              currentOrderId
-            ),
-
-            {
-
-              orderCode:
-                orderCode,
-
-              productCode:
-                "MOUSE001",
-
-              productName:
-                "Gaming Mouse",
-
-              price:
-                500000,
-
-              customerUid:
-                auth.currentUser.uid,
-
-              status:
-                "waiting_payment",
-
-              createdAt:
-                serverTimestamp()
-
-            }
-
-          );
-
-
-          // ------------------------------
-          // Hiện thông tin chuyển khoản
-          // ------------------------------
-
-          document
-            .getElementById(
-              "orderCode"
-            )
-            .textContent =
-              orderCode;
-
-
-          document
-            .getElementById(
-              "paymentBox"
-            )
-            .style.display =
-              "block";
-
-
-          document
-            .getElementById(
-              "status"
-            )
-            .innerHTML =
-              "⏳ Đang chờ người bán xác nhận thanh toán...";
-
-
-          buyButton.textContent =
-            "ĐÃ TẠO ĐƠN";
-
-
-          // ------------------------------
-          // Theo dõi Firebase
-          // ------------------------------
-
-          watchOrder();
-
-        }
-
-        catch (error) {
-
-          console.error(error);
-
-          errorBox.textContent =
-            "Không tạo được đơn hàng. Hãy thử lại.";
-
-          buyButton.disabled =
-            false;
-
-          buyButton.textContent =
-            "MUA NGAY";
-
-        }
-
-      }
-    );
-
-
-
-  // ==================================================
-  // 8. THEO DÕI TRẠNG THÁI ĐƠN
-  // ==================================================
-
-  function watchOrder() {
-
-    if (!currentOrderId) {
-      return;
-    }
-
-
-    if (unsubscribeOrder) {
-
-      unsubscribeOrder();
-
-    }
-
-
-    const orderReference =
-      doc(
-        db,
-        "orders",
-        currentOrderId
-      );
-
-
-    unsubscribeOrder =
-      onSnapshot(
-
-        orderReference,
-
-        (snapshot) => {
-
-          if (!snapshot.exists()) {
             return;
-          }
-
-
-          const data =
-            snapshot.data();
-
-
-          console.log(
-            "Trạng thái đơn:",
-            data.status
-          );
-
-
-          // ==============================
-          // ADMIN ĐÃ XÁC NHẬN TIỀN
-          // ==============================
-
-          if (
-            data.status === "paid"
-          ) {
-
-            document
-              .getElementById(
-                "status"
-              )
-              .innerHTML =
-                "✅ Thanh toán đã được xác nhận!";
-
-
-            document
-              .getElementById(
-                "shippingForm"
-              )
-              .style.display =
-                "block";
-
-          }
-
-
-          // ==============================
-          // KHÁCH ĐÃ GỬI ĐỊA CHỈ
-          // ==============================
-
-          if (
-            data.status ===
-            "shipping_info_submitted"
-          ) {
-
-            document
-              .getElementById(
-                "status"
-              )
-              .innerHTML =
-                "📦 Đã gửi thông tin nhận hàng. Người bán sẽ xử lý đơn của bạn.";
-
-
-            document
-              .getElementById(
-                "shippingForm"
-              )
-              .style.display =
-                "none";
-
-          }
-
-        },
-
-        (error) => {
-
-          console.error(
-            "Lỗi theo dõi đơn:",
-            error
-          );
-
-        }
-
-      );
-
-  }
-
-
-
-  // ==================================================
-  // 9. KHÁCH GỬI THÔNG TIN NHẬN HÀNG
-  // ==================================================
-
-  document
-    .getElementById(
-      "sendShipping"
-    )
-    .addEventListener(
-      "click",
-      async () => {
-
-        const name =
-          document
-            .getElementById(
-              "customerName"
-            )
-            .value
-            .trim();
-
-
-        const phone =
-          document
-            .getElementById(
-              "phone"
-            )
-            .value
-            .trim();
-
-
-        const address =
-          document
-            .getElementById(
-              "address"
-            )
-            .value
-            .trim();
-
-
-        const errorBox =
-          document
-            .getElementById(
-              "shippingError"
-            );
-
-
-        errorBox.textContent =
-          "";
-
-
-        // ------------------------------
-        // Kiểm tra nhập đủ chưa
-        // ------------------------------
-
-        if (
-          !name ||
-          !phone ||
-          !address
-        ) {
-
-          errorBox.textContent =
-            "Vui lòng nhập đầy đủ họ tên, số điện thoại và địa chỉ.";
-
-          return;
 
         }
 
 
-        // Kiểm tra SĐT cơ bản
-
         if (
-          !/^[0-9+\s]{8,15}$/.test(phone)
+            !/^[0-9+\s]{8,15}$/.test(
+                phone
+            )
         ) {
 
-          errorBox.textContent =
-            "Số điện thoại không hợp lệ.";
+            errorBox.textContent =
+                "Số điện thoại không hợp lệ.";
 
-          return;
+            return;
 
         }
 
 
         if (!currentOrderId) {
 
-          errorBox.textContent =
-            "Không tìm thấy đơn hàng.";
+            errorBox.textContent =
+                "Không tìm thấy đơn hàng.";
 
-          return;
+            return;
 
         }
 
 
         const button =
-          document.getElementById(
-            "sendShipping"
-          );
+            document
+            .getElementById(
+                "sendShipping"
+            );
 
 
         button.disabled = true;
 
         button.textContent =
-          "ĐANG GỬI...";
+            "ĐANG GỬI...";
 
 
         try {
 
-          // ------------------------------
-          // Gửi thông tin lên Firestore
-          // ------------------------------
+            await updateDoc(
 
-          await updateDoc(
+                doc(
+                    db,
+                    "orders",
+                    currentOrderId
+                ),
 
-            doc(
-              db,
-              "orders",
-              currentOrderId
-            ),
+                {
 
-            {
+                    customerName:
+                        name,
 
-              customerName:
-                name,
+                    phone:
+                        phone,
 
-              phone:
-                phone,
+                    address:
+                        address,
 
-              address:
-                address,
+                    status:
+                        "shipping_info_submitted",
 
-              status:
-                "shipping_info_submitted",
+                    shippingSubmittedAt:
+                        serverTimestamp()
 
-              shippingSubmittedAt:
-                serverTimestamp()
+                }
 
-            }
-
-          );
+            );
 
 
-          button.textContent =
-            "ĐÃ GỬI";
+            button.textContent =
+                "ĐÃ GỬI";
 
         }
 
         catch (error) {
 
-          console.error(error);
+            console.error(error);
 
-          errorBox.textContent =
-            "Không gửi được thông tin. Hãy thử lại.";
+            errorBox.textContent =
+                "Không gửi được thông tin.";
 
-          button.disabled =
-            false;
+            button.disabled = false;
 
-          button.textContent =
-            "GỬI THÔNG TIN";
+            button.textContent =
+                "GỬI THÔNG TIN";
 
         }
 
-      }
-    );
+    }
+);
 
 </script>
 
