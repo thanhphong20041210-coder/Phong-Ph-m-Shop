@@ -1,244 +1,863 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Phong Mouse Shop - Demo</title>
+  <title>Phong Mouse Gaming</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            margin: 0;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        header {
-            background: #111;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 30px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-        }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+    }
 
-        .product {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 10px;
-        }
+    .box {
+      background: #1f2937;
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
 
-        button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            background: #111;
-            color: white;
-            margin-top: 10px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 7px 0;
-            box-sizing: border-box;
-        }
+    h2 {
+      margin-top: 0;
+    }
 
-        #payment, #addressForm {
-            display: none;
-            margin-top: 20px;
-        }
+    .product {
+      background: #374151;
+      padding: 20px;
+      border-radius: 12px;
+    }
 
-        .code {
-            font-size: 22px;
-            font-weight: bold;
-        }
-    </style>
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4ade80;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+
+      border: none;
+      border-radius: 8px;
+
+      background: #22c55e;
+      color: #052e16;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+
+      margin-top: 10px;
+
+      border: none;
+      border-radius: 8px;
+
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .bank-box {
+      background: #172554;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    .bank-number {
+      font-size: 26px;
+      font-weight: bold;
+      color: #60a5fa;
+    }
+
+    .order-code {
+      font-size: 22px;
+      font-weight: bold;
+      color: #facc15;
+      word-break: break-all;
+    }
+
+    .status {
+      background: #374151;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    .support {
+      text-align: center;
+      color: #d1d5db;
+      margin-top: 25px;
+    }
+
+    #paymentBox,
+    #shippingForm {
+      display: none;
+    }
+
+    .error {
+      color: #f87171;
+      margin-top: 10px;
+    }
+  </style>
 </head>
+
 
 <body>
 
-<header>
-    <h1>🖱️ PHONG MOUSE SHOP</h1>
-    <p>DEMO SHOP</p>
-</header>
-
 <div class="container">
 
-    <!-- SẢN PHẨM -->
+  <h1>🖱️ Phong Mouse Gaming</h1>
+
+
+  <!-- ========================= -->
+  <!-- SẢN PHẨM -->
+  <!-- ========================= -->
+
+  <div class="box">
+
     <div class="product">
 
-        <h2>ATK Mouse Demo</h2>
+      <h2>Gaming Mouse</h2>
 
-        <p>
-            Mã sản phẩm:
-            <b>MOUSE001</b>
-        </p>
+      <p>
+        Mã sản phẩm:
+        <b>MOUSE001</b>
+      </p>
 
-        <p>
-            Giá:
-            <b>500.000đ</b>
-        </p>
+      <p class="price">
+        500.000đ
+      </p>
 
-        <button onclick="muaHang()">
-            MUA NGAY
-        </button>
+      <button id="buyButton">
+        MUA NGAY
+      </button>
+
+      <div
+        id="buyError"
+        class="error">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- THANH TOÁN -->
+  <!-- ========================= -->
+
+  <div
+    class="box"
+    id="paymentBox">
+
+    <h2>💳 Thanh toán</h2>
+
+    <p>
+      Chuyển khoản theo thông tin bên dưới:
+    </p>
+
+
+    <div class="bank-box">
+
+      <p>Ngân hàng</p>
+
+      <h2>MB Bank</h2>
+
+
+      <p>Số tài khoản</p>
+
+      <div class="bank-number">
+        0775362780
+      </div>
+
+
+      <p>Nội dung chuyển khoản</p>
+
+      <div
+        class="order-code"
+        id="orderCode">
+      </div>
 
     </div>
 
 
-    <!-- THANH TOÁN -->
-    <div id="payment">
+    <div
+      class="status"
+      id="status">
 
-        <hr>
-
-        <h2>💳 Thanh toán DEMO</h2>
-
-        <p>Ngân hàng: MB Bank (DEMO)</p>
-
-        <p>Số tài khoản:</p>
-
-        <div class="code">
-            0000000000
-        </div>
-
-        <p>Nội dung chuyển khoản:</p>
-
-        <div class="code" id="maDon"></div>
-
-        <p>
-            Sau khi chuyển khoản, người bán kiểm tra
-            và xác nhận đơn hàng.
-        </p>
-
-        <!-- DEMO nên có nút giả lập -->
-        <button onclick="xacNhanDemo()">
-            🧪 Giả lập người bán đã xác nhận
-        </button>
+      ⏳ Đang chờ người bán xác nhận thanh toán...
 
     </div>
 
+  </div>
 
-    <!-- FORM GIAO HÀNG -->
-    <div id="addressForm">
 
-        <hr>
+  <!-- ========================= -->
+  <!-- FORM NHẬN HÀNG -->
+  <!-- ========================= -->
 
-        <h2>📦 Thông tin nhận hàng</h2>
+  <div
+    class="box"
+    id="shippingForm">
 
-        <input
-            id="hoten"
-            type="text"
-            placeholder="Họ và tên"
-        >
+    <h2>
+      📦 Thông tin nhận hàng
+    </h2>
 
-        <input
-            id="sdt"
-            type="tel"
-            placeholder="Số điện thoại"
-        >
+    <p>
+      Thanh toán đã được xác nhận.
+      Hãy nhập thông tin để người bán giao hàng.
+    </p>
 
-        <input
-            id="diachi"
-            type="text"
-            placeholder="Địa chỉ nhận hàng"
-        >
 
-        <button onclick="guiThongTin()">
-            Gửi thông tin
-        </button>
+    <input
+      id="customerName"
+      type="text"
+      maxlength="100"
+      placeholder="Họ và tên">
 
+
+    <input
+      id="phone"
+      type="tel"
+      maxlength="20"
+      placeholder="Số điện thoại">
+
+
+    <textarea
+      id="address"
+      maxlength="500"
+      placeholder="Địa chỉ nhận hàng"></textarea>
+
+
+    <button id="sendShipping">
+      GỬI THÔNG TIN
+    </button>
+
+    <div
+      id="shippingError"
+      class="error">
     </div>
 
+  </div>
 
-    <!-- KẾT QUẢ -->
-    <div id="ketqua"></div>
+
+  <!-- ========================= -->
+  <!-- HỖ TRỢ -->
+  <!-- ========================= -->
+
+  <div class="support">
+
+    ☎️ Hỗ trợ:
+    <b>0775362780</b>
+
+  </div>
 
 </div>
 
 
-<script>
 
-    let maDonHang = "";
+<script type="module">
 
-    // Khi khách bấm mua
-    function muaHang() {
+  // ==================================================
+  // 1. IMPORT FIREBASE
+  // ==================================================
 
-        // Tạo mã đơn ngẫu nhiên
-        let random = Math.floor(10000 + Math.random() * 90000);
-
-        maDonHang = "MOUSE001-" + random;
-
-        document.getElementById("maDon").innerText = maDonHang;
-
-        document.getElementById("payment").style.display = "block";
-    }
+  import {
+    initializeApp
+  } from
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 
-    // Chỉ dùng để DEMO
-    function xacNhanDemo() {
-
-        alert("✅ Người bán đã xác nhận thanh toán!");
-
-        document.getElementById("addressForm").style.display = "block";
-    }
-
-
-    // Nhận thông tin giao hàng
-    function guiThongTin() {
-
-        let hoten =
-            document.getElementById("hoten").value;
-
-        let sdt =
-            document.getElementById("sdt").value;
-
-        let diachi =
-            document.getElementById("diachi").value;
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    updateDoc,
+    onSnapshot,
+    serverTimestamp
+  } from
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
-        // Kiểm tra có nhập đủ không
-        if (hoten === "" || sdt === "" || diachi === "") {
+  import {
+    getAuth,
+    signInAnonymously
+  } from
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
-            alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
+
+
+  // ==================================================
+  // 2. FIREBASE CONFIG CỦA M
+  // ==================================================
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyCKyvsdwOu2-cIYzVQA7bEBbUkfG1jQGlo",
+
+    authDomain:
+      "phong-mouse-gaming.firebaseapp.com",
+
+    projectId:
+      "phong-mouse-gaming",
+
+    storageBucket:
+      "phong-mouse-gaming.firebasestorage.app",
+
+    messagingSenderId:
+      "900019788297",
+
+    appId:
+      "1:900019788297:web:9dfb15fcae7e1e8291f6d8",
+
+    measurementId:
+      "G-MHRJYMFN8B"
+  };
+
+
+
+  // ==================================================
+  // 3. KHỞI ĐỘNG FIREBASE
+  // ==================================================
+
+  const app = initializeApp(firebaseConfig);
+
+  const db = getFirestore(app);
+
+  const auth = getAuth(app);
+
+
+
+  // ==================================================
+  // 4. CÁC BIẾN
+  // ==================================================
+
+  let currentOrderId = null;
+
+  let unsubscribeOrder = null;
+
+
+
+  // ==================================================
+  // 5. ĐĂNG NHẬP KHÁCH ẨN DANH
+  // ==================================================
+
+  try {
+
+    await signInAnonymously(auth);
+
+    console.log(
+      "Đăng nhập khách thành công:",
+      auth.currentUser.uid
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    document.getElementById(
+      "buyError"
+    ).textContent =
+      "Không thể kết nối Firebase.";
+
+  }
+
+
+
+  // ==================================================
+  // 6. TẠO MÃ ĐƠN
+  // ==================================================
+
+  function createOrderCode() {
+
+    const randomPart =
+      crypto.randomUUID()
+        .replaceAll("-", "")
+        .substring(0, 8)
+        .toUpperCase();
+
+    return "MOUSE001-" + randomPart;
+  }
+
+
+
+  // ==================================================
+  // 7. KHÁCH BẤM MUA NGAY
+  // ==================================================
+
+  document
+    .getElementById("buyButton")
+    .addEventListener(
+      "click",
+      async () => {
+
+        const buyButton =
+          document.getElementById(
+            "buyButton"
+          );
+
+        const errorBox =
+          document.getElementById(
+            "buyError"
+          );
+
+
+        errorBox.textContent = "";
+
+
+        if (!auth.currentUser) {
+
+          errorBox.textContent =
+            "Chưa kết nối được tài khoản khách.";
+
+          return;
         }
 
 
-        document.getElementById("ketqua").innerHTML = `
+        buyButton.disabled = true;
 
-            <hr>
+        buyButton.textContent =
+          "ĐANG TẠO ĐƠN...";
 
-            <h2>✅ ĐẶT HÀNG THÀNH CÔNG</h2>
 
-            <p>
-                <b>Mã đơn:</b>
-                ${maDonHang}
-            </p>
+        try {
 
-            <p>
-                <b>Người nhận:</b>
-                ${hoten}
-            </p>
+          // ------------------------------
+          // Tạo mã đơn riêng
+          // ------------------------------
 
-            <p>
-                <b>Số điện thoại:</b>
-                ${sdt}
-            </p>
+          const orderCode =
+            createOrderCode();
 
-            <p>
-                <b>Địa chỉ:</b>
-                ${diachi}
-            </p>
-        `;
+
+          currentOrderId =
+            orderCode;
+
+
+          // ------------------------------
+          // Lưu đơn vào Firestore
+          // ------------------------------
+
+          await setDoc(
+
+            doc(
+              db,
+              "orders",
+              currentOrderId
+            ),
+
+            {
+
+              orderCode:
+                orderCode,
+
+              productCode:
+                "MOUSE001",
+
+              productName:
+                "Gaming Mouse",
+
+              price:
+                500000,
+
+              customerUid:
+                auth.currentUser.uid,
+
+              status:
+                "waiting_payment",
+
+              createdAt:
+                serverTimestamp()
+
+            }
+
+          );
+
+
+          // ------------------------------
+          // Hiện thông tin chuyển khoản
+          // ------------------------------
+
+          document
+            .getElementById(
+              "orderCode"
+            )
+            .textContent =
+              orderCode;
+
+
+          document
+            .getElementById(
+              "paymentBox"
+            )
+            .style.display =
+              "block";
+
+
+          document
+            .getElementById(
+              "status"
+            )
+            .innerHTML =
+              "⏳ Đang chờ người bán xác nhận thanh toán...";
+
+
+          buyButton.textContent =
+            "ĐÃ TẠO ĐƠN";
+
+
+          // ------------------------------
+          // Theo dõi Firebase
+          // ------------------------------
+
+          watchOrder();
+
+        }
+
+        catch (error) {
+
+          console.error(error);
+
+          errorBox.textContent =
+            "Không tạo được đơn hàng. Hãy thử lại.";
+
+          buyButton.disabled =
+            false;
+
+          buyButton.textContent =
+            "MUA NGAY";
+
+        }
+
+      }
+    );
+
+
+
+  // ==================================================
+  // 8. THEO DÕI TRẠNG THÁI ĐƠN
+  // ==================================================
+
+  function watchOrder() {
+
+    if (!currentOrderId) {
+      return;
     }
+
+
+    if (unsubscribeOrder) {
+
+      unsubscribeOrder();
+
+    }
+
+
+    const orderReference =
+      doc(
+        db,
+        "orders",
+        currentOrderId
+      );
+
+
+    unsubscribeOrder =
+      onSnapshot(
+
+        orderReference,
+
+        (snapshot) => {
+
+          if (!snapshot.exists()) {
+            return;
+          }
+
+
+          const data =
+            snapshot.data();
+
+
+          console.log(
+            "Trạng thái đơn:",
+            data.status
+          );
+
+
+          // ==============================
+          // ADMIN ĐÃ XÁC NHẬN TIỀN
+          // ==============================
+
+          if (
+            data.status === "paid"
+          ) {
+
+            document
+              .getElementById(
+                "status"
+              )
+              .innerHTML =
+                "✅ Thanh toán đã được xác nhận!";
+
+
+            document
+              .getElementById(
+                "shippingForm"
+              )
+              .style.display =
+                "block";
+
+          }
+
+
+          // ==============================
+          // KHÁCH ĐÃ GỬI ĐỊA CHỈ
+          // ==============================
+
+          if (
+            data.status ===
+            "shipping_info_submitted"
+          ) {
+
+            document
+              .getElementById(
+                "status"
+              )
+              .innerHTML =
+                "📦 Đã gửi thông tin nhận hàng. Người bán sẽ xử lý đơn của bạn.";
+
+
+            document
+              .getElementById(
+                "shippingForm"
+              )
+              .style.display =
+                "none";
+
+          }
+
+        },
+
+        (error) => {
+
+          console.error(
+            "Lỗi theo dõi đơn:",
+            error
+          );
+
+        }
+
+      );
+
+  }
+
+
+
+  // ==================================================
+  // 9. KHÁCH GỬI THÔNG TIN NHẬN HÀNG
+  // ==================================================
+
+  document
+    .getElementById(
+      "sendShipping"
+    )
+    .addEventListener(
+      "click",
+      async () => {
+
+        const name =
+          document
+            .getElementById(
+              "customerName"
+            )
+            .value
+            .trim();
+
+
+        const phone =
+          document
+            .getElementById(
+              "phone"
+            )
+            .value
+            .trim();
+
+
+        const address =
+          document
+            .getElementById(
+              "address"
+            )
+            .value
+            .trim();
+
+
+        const errorBox =
+          document
+            .getElementById(
+              "shippingError"
+            );
+
+
+        errorBox.textContent =
+          "";
+
+
+        // ------------------------------
+        // Kiểm tra nhập đủ chưa
+        // ------------------------------
+
+        if (
+          !name ||
+          !phone ||
+          !address
+        ) {
+
+          errorBox.textContent =
+            "Vui lòng nhập đầy đủ họ tên, số điện thoại và địa chỉ.";
+
+          return;
+
+        }
+
+
+        // Kiểm tra SĐT cơ bản
+
+        if (
+          !/^[0-9+\s]{8,15}$/.test(phone)
+        ) {
+
+          errorBox.textContent =
+            "Số điện thoại không hợp lệ.";
+
+          return;
+
+        }
+
+
+        if (!currentOrderId) {
+
+          errorBox.textContent =
+            "Không tìm thấy đơn hàng.";
+
+          return;
+
+        }
+
+
+        const button =
+          document.getElementById(
+            "sendShipping"
+          );
+
+
+        button.disabled = true;
+
+        button.textContent =
+          "ĐANG GỬI...";
+
+
+        try {
+
+          // ------------------------------
+          // Gửi thông tin lên Firestore
+          // ------------------------------
+
+          await updateDoc(
+
+            doc(
+              db,
+              "orders",
+              currentOrderId
+            ),
+
+            {
+
+              customerName:
+                name,
+
+              phone:
+                phone,
+
+              address:
+                address,
+
+              status:
+                "shipping_info_submitted",
+
+              shippingSubmittedAt:
+                serverTimestamp()
+
+            }
+
+          );
+
+
+          button.textContent =
+            "ĐÃ GỬI";
+
+        }
+
+        catch (error) {
+
+          console.error(error);
+
+          errorBox.textContent =
+            "Không gửi được thông tin. Hãy thử lại.";
+
+          button.disabled =
+            false;
+
+          button.textContent =
+            "GỬI THÔNG TIN";
+
+        }
+
+      }
+    );
 
 </script>
 
