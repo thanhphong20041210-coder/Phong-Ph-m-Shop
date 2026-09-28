@@ -1,1 +1,746 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Admin - Phong Mouse Gaming</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.box {
+    background: #1f2937;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin: 7px 0;
+    border: 0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #22c55e;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.logout {
+    background: #ef4444;
+    color: white;
+}
+
+.order {
+    background: #374151;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+
+.code {
+    color: #facc15;
+    font-weight: bold;
+}
+
+.waiting {
+    color: #facc15;
+}
+
+.paid {
+    color: #4ade80;
+}
+
+.shipping {
+    background: #172554;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+#error {
+    color: #f87171;
+    margin-top: 10px;
+}
+
+#adminPanel {
+    display: none;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    .top {
+        display: block;
+    }
+
+    .logout {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🔐 PHONG MOUSE ADMIN</h1>
+
+<!-- ĐĂNG NHẬP -->
+<div class="box" id="loginBox">
+
+    <h2>Đăng nhập Admin</h2>
+
+    <input
+        id="email"
+        type="email"
+        placeholder="Email Admin">
+
+    <input
+        id="password"
+        type="password"
+        placeholder="Mật khẩu">
+
+    <button id="loginButton">
+        ĐĂNG NHẬP
+    </button>
+
+    <div id="error"></div>
+
+</div>
+
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+
+    <div class="box top">
+
+        <div>
+            <h2>📦 Quản lý đơn hàng</h2>
+            <div id="adminEmail"></div>
+        </div>
+
+        <button
+            id="logoutButton"
+            class="logout">
+            ĐĂNG XUẤT
+        </button>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Danh sách đơn</h2>
+
+        <div id="orders">
+            Đang tải đơn hàng...
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+// ================================
+// FIREBASE IMPORT
+// ================================
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    collection,
+    query,
+    onSnapshot,
+    doc,
+    updateDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+// ================================
+// FIREBASE CONFIG
+// ================================
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCKyvsdwOu2-cIYzVQA7bEBbUkfG1jQGlo",
+
+    authDomain:
+        "phong-mouse-gaming.firebaseapp.com",
+
+    projectId:
+        "phong-mouse-gaming",
+
+    storageBucket:
+        "phong-mouse-gaming.firebasestorage.app",
+
+    messagingSenderId:
+        "900019788297",
+
+    appId:
+        "1:900019788297:web:9dfb15fcae7e1e8291f6d8",
+
+    measurementId:
+        "G-MHRJYMFN8B"
+};
+
+
+// ================================
+// KHỞI ĐỘNG
+// ================================
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+// UID ADMIN
+const ADMIN_UID =
+    "2z3xj2oNPpXSivcMR5wQJXzVgQK2";
+
+
+// ================================
+// ĐĂNG NHẬP
+// ================================
+
+document
+.getElementById("loginButton")
+.addEventListener("click", async () => {
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+    const errorBox =
+        document.getElementById("error");
+
+    errorBox.textContent = "";
+
+    try {
+
+        const result =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+
+        // Kiểm tra đúng UID admin
+        if (
+            result.user.uid !== ADMIN_UID
+        ) {
+
+            await signOut(auth);
+
+            errorBox.textContent =
+                "Tài khoản này không có quyền Admin.";
+
+            return;
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        errorBox.textContent =
+            "Email hoặc mật khẩu không đúng.";
+
+    }
+
+});
+
+
+// ================================
+// THEO DÕI ĐĂNG NHẬP
+// ================================
+
+onAuthStateChanged(
+    auth,
+    async (user) => {
+
+        if (
+            user &&
+            user.uid === ADMIN_UID
+        ) {
+
+            document
+            .getElementById("loginBox")
+            .style.display = "none";
+
+
+            document
+            .getElementById("adminPanel")
+            .style.display = "block";
+
+
+            document
+            .getElementById("adminEmail")
+            .textContent =
+                "Đăng nhập: " + user.email;
+
+
+            loadOrders();
+
+        }
+
+        else {
+
+            document
+            .getElementById("loginBox")
+            .style.display = "block";
+
+
+            document
+            .getElementById("adminPanel")
+            .style.display = "none";
+
+        }
+
+    }
+);
+
+
+// ================================
+// ĐĂNG XUẤT
+// ================================
+
+document
+.getElementById("logoutButton")
+.addEventListener("click", async () => {
+
+    await signOut(auth);
+
+});
+
+
+// ================================
+// HIỂN THỊ ĐƠN HÀNG
+// ================================
+
+function loadOrders() {
+
+    const ordersQuery =
+        query(
+            collection(
+                db,
+                "orders"
+            )
+        );
+
+
+    onSnapshot(
+
+        ordersQuery,
+
+        (snapshot) => {
+
+            const ordersBox =
+                document
+                .getElementById("orders");
+
+
+            ordersBox.innerHTML = "";
+
+
+            if (snapshot.empty) {
+
+                ordersBox.innerHTML =
+                    "Chưa có đơn hàng.";
+
+                return;
+
+            }
+
+
+            snapshot.forEach(
+                (orderDocument) => {
+
+                    const data =
+                        orderDocument.data();
+
+
+                    const orderDiv =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    orderDiv.className =
+                        "order";
+
+
+                    // Mã đơn
+                    const title =
+                        document.createElement("h3");
+
+                    title.textContent =
+                        "Đơn: " +
+                        (data.orderCode || orderDocument.id);
+
+                    orderDiv.appendChild(title);
+
+
+                    // Sản phẩm
+                    const product =
+                        document.createElement("p");
+
+                    product.textContent =
+                        "Sản phẩm: " +
+                        (data.productName || "");
+
+                    orderDiv.appendChild(product);
+
+
+                    // Giá
+                    const price =
+                        document.createElement("p");
+
+                    price.textContent =
+                        "Giá: " +
+                        Number(
+                            data.price || 0
+                        ).toLocaleString("vi-VN")
+                        + "đ";
+
+                    orderDiv.appendChild(price);
+
+
+                    // Trạng thái
+                    const status =
+                        document.createElement("p");
+
+                    status.textContent =
+                        "Trạng thái: " +
+                        getStatusText(
+                            data.status
+                        );
+
+                    orderDiv.appendChild(status);
+
+
+                    // =====================
+                    // ĐANG CHỜ THANH TOÁN
+                    // =====================
+
+                    if (
+                        data.status ===
+                        "waiting_payment"
+                    ) {
+
+                        const button =
+                            document.createElement(
+                                "button"
+                            );
+
+                        button.textContent =
+                            "✅ XÁC NHẬN ĐÃ NHẬN TIỀN";
+
+
+                        button.addEventListener(
+                            "click",
+                            async () => {
+
+                                const ok =
+                                    confirm(
+                                        "M đã kiểm tra tài khoản MB Bank và chắc chắn đã nhận đúng tiền của đơn " +
+                                        data.orderCode +
+                                        " chưa?"
+                                    );
+
+
+                                if (!ok) {
+                                    return;
+                                }
+
+
+                                button.disabled =
+                                    true;
+
+
+                                try {
+
+                                    await updateDoc(
+
+                                        doc(
+                                            db,
+                                            "orders",
+                                            orderDocument.id
+                                        ),
+
+                                        {
+
+                                            status:
+                                                "paid",
+
+                                            paidAt:
+                                                serverTimestamp()
+
+                                        }
+
+                                    );
+
+                                }
+
+                                catch (error) {
+
+                                    console.error(
+                                        error
+                                    );
+
+                                    alert(
+                                        "Không xác nhận được đơn."
+                                    );
+
+
+                                    button.disabled =
+                                        false;
+
+                                }
+
+                            }
+                        );
+
+
+                        orderDiv.appendChild(
+                            button
+                        );
+
+                    }
+
+
+                    // =====================
+                    // ĐÃ THANH TOÁN
+                    // =====================
+
+                    if (
+                        data.status ===
+                        "paid"
+                    ) {
+
+                        const waiting =
+                            document.createElement(
+                                "p"
+                            );
+
+                        waiting.textContent =
+                            "✅ Đã xác nhận tiền - đang chờ khách nhập thông tin giao hàng.";
+
+                        orderDiv.appendChild(
+                            waiting
+                        );
+
+                    }
+
+
+                    // =====================
+                    // KHÁCH ĐÃ GỬI ĐỊA CHỈ
+                    // =====================
+
+                    if (
+                        data.status ===
+                        "shipping_info_submitted"
+                    ) {
+
+                        const shipping =
+                            document.createElement(
+                                "div"
+                            );
+
+                        shipping.className =
+                            "shipping";
+
+
+                        const heading =
+                            document.createElement(
+                                "h3"
+                            );
+
+                        heading.textContent =
+                            "📦 THÔNG TIN GIAO HÀNG";
+
+
+                        const name =
+                            document.createElement(
+                                "p"
+                            );
+
+                        name.textContent =
+                            "Họ tên: " +
+                            (data.customerName || "");
+
+
+                        const phone =
+                            document.createElement(
+                                "p"
+                            );
+
+                        phone.textContent =
+                            "SĐT: " +
+                            (data.phone || "");
+
+
+                        const address =
+                            document.createElement(
+                                "p"
+                            );
+
+                        address.textContent =
+                            "Địa chỉ: " +
+                            (data.address || "");
+
+
+                        shipping.appendChild(
+                            heading
+                        );
+
+                        shipping.appendChild(
+                            name
+                        );
+
+                        shipping.appendChild(
+                            phone
+                        );
+
+                        shipping.appendChild(
+                            address
+                        );
+
+
+                        orderDiv.appendChild(
+                            shipping
+                        );
+
+                    }
+
+
+                    ordersBox.appendChild(
+                        orderDiv
+                    );
+
+                }
+            );
+
+        },
+
+        (error) => {
+
+            console.error(error);
+
+            document
+            .getElementById("orders")
+            .textContent =
+                "Không tải được đơn hàng.";
+
+        }
+
+    );
+
+}
+
+
+// ================================
+// ĐỔI TÊN TRẠNG THÁI
+// ================================
+
+function getStatusText(status) {
+
+    if (
+        status ===
+        "waiting_payment"
+    ) {
+
+        return "⏳ Chờ thanh toán";
+
+    }
+
+
+    if (
+        status ===
+        "paid"
+    ) {
+
+        return "✅ Đã thanh toán";
+
+    }
+
+
+    if (
+        status ===
+        "shipping_info_submitted"
+    ) {
+
+        return "📦 Đã nhận thông tin giao hàng";
+
+    }
+
+
+    return status || "Không xác định";
+
+}
+
+</script>
+
+</body>
+</html>
