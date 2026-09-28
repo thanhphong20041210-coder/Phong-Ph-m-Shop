@@ -18,8 +18,12 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 30px auto;
+}
+
+h1 {
+    text-align: center;
 }
 
 .box {
@@ -29,38 +33,91 @@ body {
     margin-bottom: 20px;
 }
 
-h1 {
-    text-align: center;
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
 }
 
-input {
-    width: 100%;
-    padding: 13px;
-    margin: 7px 0;
-    border: 0;
-    border-radius: 8px;
-    font-size: 16px;
+textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
 button {
     padding: 12px 18px;
-    border: 0;
+    border: none;
     border-radius: 8px;
     background: #22c55e;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 8px;
 }
 
-.logout {
+button:hover {
+    opacity: .9;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.red {
     background: #ef4444;
     color: white;
 }
 
+.orange {
+    background: #f59e0b;
+}
+
+.blue {
+    background: #3b82f6;
+    color: white;
+}
+
+.gray {
+    background: #6b7280;
+    color: white;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.product,
 .order {
     background: #374151;
-    padding: 20px;
+    padding: 18px;
     border-radius: 12px;
-    margin-top: 15px;
+    margin-top: 12px;
+}
+
+.product img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    background: white;
+    border-radius: 10px;
+}
+
+.price {
+    color: #4ade80;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .code {
@@ -68,23 +125,26 @@ button {
     font-weight: bold;
 }
 
-.waiting {
-    color: #facc15;
-}
-
-.paid {
-    color: #4ade80;
-}
-
 .shipping {
     background: #172554;
     padding: 15px;
     border-radius: 10px;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
-#error {
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.error {
     color: #f87171;
+    margin-top: 10px;
+}
+
+.success {
+    color: #4ade80;
     margin-top: 10px;
 }
 
@@ -92,21 +152,13 @@ button {
     display: none;
 }
 
-.top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-@media (max-width: 600px) {
-    .top {
-        display: block;
+@media (max-width: 750px) {
+    .grid {
+        grid-template-columns: 1fr;
     }
 
-    .logout {
-        width: 100%;
-        margin-top: 10px;
+    .top {
+        display: block;
     }
 }
 </style>
@@ -118,7 +170,10 @@ button {
 
 <h1>🔐 PHONG MOUSE ADMIN</h1>
 
+<!-- ========================= -->
 <!-- ĐĂNG NHẬP -->
+<!-- ========================= -->
+
 <div class="box" id="loginBox">
 
     <h2>Đăng nhập Admin</h2>
@@ -137,33 +192,110 @@ button {
         ĐĂNG NHẬP
     </button>
 
-    <div id="error"></div>
+    <div id="loginError" class="error"></div>
 
 </div>
 
 
+<!-- ========================= -->
 <!-- ADMIN PANEL -->
+<!-- ========================= -->
+
 <div id="adminPanel">
 
     <div class="box top">
 
         <div>
-            <h2>📦 Quản lý đơn hàng</h2>
+            <h2>⚙️ Trang quản trị</h2>
             <div id="adminEmail"></div>
         </div>
 
         <button
             id="logoutButton"
-            class="logout">
+            class="red">
             ĐĂNG XUẤT
         </button>
 
     </div>
 
 
+    <div class="grid">
+
+        <!-- ========================= -->
+        <!-- THÊM / SỬA SẢN PHẨM -->
+        <!-- ========================= -->
+
+        <div class="box">
+
+            <h2 id="productFormTitle">
+                🖱️ Thêm chuột
+            </h2>
+
+            <input
+                id="productName"
+                placeholder="Tên sản phẩm">
+
+            <input
+                id="productCode"
+                placeholder="Mã sản phẩm, VD: ATK-X1">
+
+            <input
+                id="productPrice"
+                type="number"
+                min="0"
+                placeholder="Giá, VD: 500000">
+
+            <input
+                id="productImage"
+                type="url"
+                placeholder="Link ảnh sản phẩm">
+
+            <textarea
+                id="productDescription"
+                placeholder="Mô tả sản phẩm"></textarea>
+
+            <button id="saveProduct">
+                ➕ THÊM SẢN PHẨM
+            </button>
+
+            <button
+                id="cancelEdit"
+                class="gray"
+                style="display:none;">
+                HỦY SỬA
+            </button>
+
+            <div
+                id="productMessage">
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- DANH SÁCH SẢN PHẨM -->
+        <!-- ========================= -->
+
+        <div class="box">
+
+            <h2>🖱️ Danh sách sản phẩm</h2>
+
+            <div id="products">
+                Đang tải...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- ĐƠN HÀNG -->
+    <!-- ========================= -->
+
     <div class="box">
 
-        <h2>Danh sách đơn</h2>
+        <h2>📦 Quản lý đơn hàng</h2>
 
         <div id="orders">
             Đang tải đơn hàng...
@@ -178,13 +310,14 @@ button {
 
 <script type="module">
 
-// ================================
-// FIREBASE IMPORT
-// ================================
+// ==================================================
+// FIREBASE
+// ==================================================
 
 import {
     initializeApp
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 
 import {
@@ -192,23 +325,26 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 
 import {
     getFirestore,
     collection,
-    query,
-    onSnapshot,
     doc,
+    setDoc,
     updateDoc,
+    deleteDoc,
+    onSnapshot,
     serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
-// ================================
+// ==================================================
 // FIREBASE CONFIG
-// ================================
+// ==================================================
 
 const firebaseConfig = {
 
@@ -235,10 +371,6 @@ const firebaseConfig = {
 };
 
 
-// ================================
-// KHỞI ĐỘNG
-// ================================
-
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
@@ -246,14 +378,18 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 
-// UID ADMIN
 const ADMIN_UID =
     "2z3xj2oNPpXSivcMR5wQJXzVgQK2";
 
 
-// ================================
-// ĐĂNG NHẬP
-// ================================
+let editingProductId = null;
+
+let productsCache = {};
+
+
+// ==================================================
+// LOGIN
+// ==================================================
 
 document
 .getElementById("loginButton")
@@ -262,18 +398,18 @@ document
     const email =
         document
         .getElementById("email")
-        .value
-        .trim();
+        .value.trim();
 
     const password =
         document
         .getElementById("password")
         .value;
 
-    const errorBox =
-        document.getElementById("error");
+    const error =
+        document
+        .getElementById("loginError");
 
-    errorBox.textContent = "";
+    error.textContent = "";
 
     try {
 
@@ -284,27 +420,22 @@ document
                 password
             );
 
-
-        // Kiểm tra đúng UID admin
         if (
             result.user.uid !== ADMIN_UID
         ) {
 
             await signOut(auth);
 
-            errorBox.textContent =
-                "Tài khoản này không có quyền Admin.";
+            error.textContent =
+                "Tài khoản không có quyền Admin.";
 
-            return;
         }
 
-    }
+    } catch (err) {
 
-    catch (error) {
+        console.error(err);
 
-        console.error(error);
-
-        errorBox.textContent =
+        error.textContent =
             "Email hoặc mật khẩu không đúng.";
 
     }
@@ -312,13 +443,13 @@ document
 });
 
 
-// ================================
-// THEO DÕI ĐĂNG NHẬP
-// ================================
+// ==================================================
+// AUTH STATE
+// ==================================================
 
 onAuthStateChanged(
     auth,
-    async (user) => {
+    async user => {
 
         if (
             user &&
@@ -329,28 +460,24 @@ onAuthStateChanged(
             .getElementById("loginBox")
             .style.display = "none";
 
-
             document
             .getElementById("adminPanel")
             .style.display = "block";
-
 
             document
             .getElementById("adminEmail")
             .textContent =
                 "Đăng nhập: " + user.email;
 
+            loadProducts();
 
             loadOrders();
 
-        }
-
-        else {
+        } else {
 
             document
             .getElementById("loginBox")
             .style.display = "block";
-
 
             document
             .getElementById("adminPanel")
@@ -362,9 +489,9 @@ onAuthStateChanged(
 );
 
 
-// ================================
-// ĐĂNG XUẤT
-// ================================
+// ==================================================
+// LOGOUT
+// ==================================================
 
 document
 .getElementById("logoutButton")
@@ -375,38 +502,572 @@ document
 });
 
 
-// ================================
-// HIỂN THỊ ĐƠN HÀNG
-// ================================
+// ==================================================
+// TẠO ID SẢN PHẨM AN TOÀN
+// ==================================================
 
-function loadOrders() {
+function productIdFromCode(code) {
 
-    const ordersQuery =
-        query(
-            collection(
+    return code
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9_-]/g, "-");
+
+}
+
+
+// ==================================================
+// THÊM / SỬA SẢN PHẨM
+// ==================================================
+
+document
+.getElementById("saveProduct")
+.addEventListener("click", async () => {
+
+    const name =
+        document
+        .getElementById("productName")
+        .value.trim();
+
+    const code =
+        document
+        .getElementById("productCode")
+        .value.trim().toUpperCase();
+
+    const price =
+        Number(
+            document
+            .getElementById("productPrice")
+            .value
+        );
+
+    const image =
+        document
+        .getElementById("productImage")
+        .value.trim();
+
+    const description =
+        document
+        .getElementById("productDescription")
+        .value.trim();
+
+    const message =
+        document
+        .getElementById("productMessage");
+
+
+    message.textContent = "";
+    message.className = "";
+
+
+    if (
+        !name ||
+        !code ||
+        !Number.isFinite(price) ||
+        price <= 0
+    ) {
+
+        message.textContent =
+            "Nhập tên, mã và giá sản phẩm.";
+
+        message.className =
+            "error";
+
+        return;
+
+    }
+
+
+    const productId =
+        editingProductId ||
+        productIdFromCode(code);
+
+
+    try {
+
+        await setDoc(
+
+            doc(
                 db,
-                "orders"
-            )
+                "products",
+                productId
+            ),
+
+            {
+
+                name: name,
+
+                code: code,
+
+                price: price,
+
+                image: image,
+
+                description:
+                    description,
+
+                active: true,
+
+                updatedAt:
+                    serverTimestamp()
+
+            },
+
+            {
+                merge: true
+            }
+
         );
 
 
+        message.textContent =
+            editingProductId
+            ? "✅ Đã cập nhật sản phẩm."
+            : "✅ Đã thêm sản phẩm.";
+
+        message.className =
+            "success";
+
+
+        clearProductForm();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "Không lưu được sản phẩm.";
+
+        message.className =
+            "error";
+
+    }
+
+});
+
+
+// ==================================================
+// LOAD PRODUCTS
+// ==================================================
+
+function loadProducts() {
+
     onSnapshot(
 
-        ordersQuery,
+        collection(
+            db,
+            "products"
+        ),
 
-        (snapshot) => {
+        snapshot => {
 
-            const ordersBox =
+            const box =
                 document
-                .getElementById("orders");
+                .getElementById("products");
 
+            box.innerHTML = "";
 
-            ordersBox.innerHTML = "";
+            productsCache = {};
 
 
             if (snapshot.empty) {
 
-                ordersBox.innerHTML =
+                box.textContent =
+                    "Chưa có sản phẩm.";
+
+                return;
+
+            }
+
+
+            snapshot.forEach(
+                productDocument => {
+
+                    const data =
+                        productDocument.data();
+
+                    productsCache[
+                        productDocument.id
+                    ] = data;
+
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "product";
+
+
+                    // Ảnh
+                    if (data.image) {
+
+                        const img =
+                            document.createElement(
+                                "img"
+                            );
+
+                        img.src =
+                            data.image;
+
+                        img.alt =
+                            data.name || "Sản phẩm";
+
+                        item.appendChild(img);
+
+                    }
+
+
+                    const name =
+                        document.createElement(
+                            "h3"
+                        );
+
+                    name.textContent =
+                        data.name || "";
+
+                    item.appendChild(name);
+
+
+                    const code =
+                        document.createElement(
+                            "p"
+                        );
+
+                    code.textContent =
+                        "Mã: " +
+                        (data.code || "");
+
+                    item.appendChild(code);
+
+
+                    const price =
+                        document.createElement(
+                            "p"
+                        );
+
+                    price.className =
+                        "price";
+
+                    price.textContent =
+                        Number(
+                            data.price || 0
+                        ).toLocaleString("vi-VN")
+                        + "đ";
+
+                    item.appendChild(price);
+
+
+                    const status =
+                        document.createElement(
+                            "p"
+                        );
+
+                    status.textContent =
+                        data.active === false
+                        ? "🔴 Đang ẩn"
+                        : "🟢 Đang bán";
+
+                    item.appendChild(status);
+
+
+                    const actions =
+                        document.createElement(
+                            "div"
+                        );
+
+                    actions.className =
+                        "actions";
+
+
+                    // SỬA
+                    const editButton =
+                        document.createElement(
+                            "button"
+                        );
+
+                    editButton.className =
+                        "blue";
+
+                    editButton.textContent =
+                        "✏️ SỬA";
+
+                    editButton.onclick =
+                        () => editProduct(
+                            productDocument.id
+                        );
+
+
+                    // ẨN / HIỆN
+                    const hideButton =
+                        document.createElement(
+                            "button"
+                        );
+
+                    hideButton.className =
+                        "orange";
+
+                    hideButton.textContent =
+                        data.active === false
+                        ? "👁️ HIỆN"
+                        : "🙈 ẨN";
+
+                    hideButton.onclick =
+                        async () => {
+
+                            await updateDoc(
+
+                                doc(
+                                    db,
+                                    "products",
+                                    productDocument.id
+                                ),
+
+                                {
+                                    active:
+                                        data.active === false
+                                }
+
+                            );
+
+                        };
+
+
+                    // XÓA
+                    const deleteButton =
+                        document.createElement(
+                            "button"
+                        );
+
+                    deleteButton.className =
+                        "red";
+
+                    deleteButton.textContent =
+                        "🗑️ XÓA";
+
+                    deleteButton.onclick =
+                        async () => {
+
+                            const ok =
+                                confirm(
+                                    "Xóa sản phẩm " +
+                                    data.name +
+                                    "?"
+                                );
+
+                            if (!ok)
+                                return;
+
+
+                            await deleteDoc(
+
+                                doc(
+                                    db,
+                                    "products",
+                                    productDocument.id
+                                )
+
+                            );
+
+                        };
+
+
+                    actions.appendChild(
+                        editButton
+                    );
+
+                    actions.appendChild(
+                        hideButton
+                    );
+
+                    actions.appendChild(
+                        deleteButton
+                    );
+
+
+                    item.appendChild(
+                        actions
+                    );
+
+
+                    box.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+
+    );
+
+}
+
+
+// ==================================================
+// EDIT PRODUCT
+// ==================================================
+
+function editProduct(id) {
+
+    const data =
+        productsCache[id];
+
+    if (!data)
+        return;
+
+
+    editingProductId =
+        id;
+
+
+    document
+    .getElementById("productName")
+    .value =
+        data.name || "";
+
+
+    document
+    .getElementById("productCode")
+    .value =
+        data.code || "";
+
+
+    document
+    .getElementById("productPrice")
+    .value =
+        data.price || "";
+
+
+    document
+    .getElementById("productImage")
+    .value =
+        data.image || "";
+
+
+    document
+    .getElementById("productDescription")
+    .value =
+        data.description || "";
+
+
+    document
+    .getElementById("productFormTitle")
+    .textContent =
+        "✏️ Sửa sản phẩm";
+
+
+    document
+    .getElementById("saveProduct")
+    .textContent =
+        "💾 LƯU THAY ĐỔI";
+
+
+    document
+    .getElementById("cancelEdit")
+    .style.display =
+        "inline-block";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+// ==================================================
+// HỦY EDIT
+// ==================================================
+
+document
+.getElementById("cancelEdit")
+.addEventListener(
+    "click",
+    clearProductForm
+);
+
+
+function clearProductForm() {
+
+    editingProductId =
+        null;
+
+
+    document
+    .getElementById("productName")
+    .value = "";
+
+
+    document
+    .getElementById("productCode")
+    .value = "";
+
+
+    document
+    .getElementById("productPrice")
+    .value = "";
+
+
+    document
+    .getElementById("productImage")
+    .value = "";
+
+
+    document
+    .getElementById("productDescription")
+    .value = "";
+
+
+    document
+    .getElementById("productFormTitle")
+    .textContent =
+        "🖱️ Thêm chuột";
+
+
+    document
+    .getElementById("saveProduct")
+    .textContent =
+        "➕ THÊM SẢN PHẨM";
+
+
+    document
+    .getElementById("cancelEdit")
+    .style.display =
+        "none";
+
+}
+
+
+// ==================================================
+// LOAD ORDERS
+// ==================================================
+
+function loadOrders() {
+
+    onSnapshot(
+
+        collection(
+            db,
+            "orders"
+        ),
+
+        snapshot => {
+
+            const box =
+                document
+                .getElementById("orders");
+
+            box.innerHTML = "";
+
+
+            if (snapshot.empty) {
+
+                box.textContent =
                     "Chưa có đơn hàng.";
 
                 return;
@@ -415,107 +1076,118 @@ function loadOrders() {
 
 
             snapshot.forEach(
-                (orderDocument) => {
+                orderDocument => {
 
                     const data =
                         orderDocument.data();
 
 
-                    const orderDiv =
+                    const item =
                         document.createElement(
                             "div"
                         );
 
-
-                    orderDiv.className =
+                    item.className =
                         "order";
 
 
-                    // Mã đơn
                     const title =
-                        document.createElement("h3");
+                        document.createElement(
+                            "h3"
+                        );
 
                     title.textContent =
                         "Đơn: " +
-                        (data.orderCode || orderDocument.id);
+                        (
+                            data.orderCode ||
+                            orderDocument.id
+                        );
 
-                    orderDiv.appendChild(title);
+                    item.appendChild(
+                        title
+                    );
 
 
-                    // Sản phẩm
                     const product =
-                        document.createElement("p");
+                        document.createElement(
+                            "p"
+                        );
 
                     product.textContent =
                         "Sản phẩm: " +
                         (data.productName || "");
 
-                    orderDiv.appendChild(product);
+                    item.appendChild(
+                        product
+                    );
 
 
-                    // Giá
                     const price =
-                        document.createElement("p");
+                        document.createElement(
+                            "p"
+                        );
 
                     price.textContent =
                         "Giá: " +
                         Number(
                             data.price || 0
-                        ).toLocaleString("vi-VN")
+                        ).toLocaleString(
+                            "vi-VN"
+                        )
                         + "đ";
 
-                    orderDiv.appendChild(price);
+                    item.appendChild(
+                        price
+                    );
 
 
-                    // Trạng thái
                     const status =
-                        document.createElement("p");
+                        document.createElement(
+                            "p"
+                        );
 
                     status.textContent =
                         "Trạng thái: " +
-                        getStatusText(
+                        statusText(
                             data.status
                         );
 
-                    orderDiv.appendChild(status);
+                    item.appendChild(
+                        status
+                    );
 
 
-                    // =====================
-                    // ĐANG CHỜ THANH TOÁN
-                    // =====================
-
+                    // CHỜ TIỀN
                     if (
                         data.status ===
                         "waiting_payment"
                     ) {
 
-                        const button =
+                        const confirmButton =
                             document.createElement(
                                 "button"
                             );
 
-                        button.textContent =
+                        confirmButton.textContent =
                             "✅ XÁC NHẬN ĐÃ NHẬN TIỀN";
 
 
-                        button.addEventListener(
-                            "click",
+                        confirmButton.onclick =
                             async () => {
 
                                 const ok =
                                     confirm(
-                                        "M đã kiểm tra tài khoản MB Bank và chắc chắn đã nhận đúng tiền của đơn " +
+                                        "Chỉ xác nhận sau khi m đã kiểm tra MB Bank và nhận đúng số tiền cho đơn " +
                                         data.orderCode +
-                                        " chưa?"
+                                        ". Xác nhận?"
                                     );
 
 
-                                if (!ok) {
+                                if (!ok)
                                     return;
-                                }
 
 
-                                button.disabled =
+                                confirmButton.disabled =
                                     true;
 
 
@@ -550,54 +1222,46 @@ function loadOrders() {
                                     );
 
                                     alert(
-                                        "Không xác nhận được đơn."
+                                        "Không cập nhật được đơn."
                                     );
 
-
-                                    button.disabled =
+                                    confirmButton.disabled =
                                         false;
 
                                 }
 
-                            }
-                        );
+                            };
 
 
-                        orderDiv.appendChild(
-                            button
+                        item.appendChild(
+                            confirmButton
                         );
 
                     }
 
 
-                    // =====================
-                    // ĐÃ THANH TOÁN
-                    // =====================
-
+                    // ĐÃ NHẬN TIỀN
                     if (
                         data.status ===
                         "paid"
                     ) {
 
-                        const waiting =
+                        const text =
                             document.createElement(
                                 "p"
                             );
 
-                        waiting.textContent =
-                            "✅ Đã xác nhận tiền - đang chờ khách nhập thông tin giao hàng.";
+                        text.textContent =
+                            "✅ Đã nhận tiền. Đang chờ khách gửi thông tin nhận hàng.";
 
-                        orderDiv.appendChild(
-                            waiting
+                        item.appendChild(
+                            text
                         );
 
                     }
 
 
-                    // =====================
-                    // KHÁCH ĐÃ GỬI ĐỊA CHỈ
-                    // =====================
-
+                    // THÔNG TIN GIAO HÀNG
                     if (
                         data.status ===
                         "shipping_info_submitted"
@@ -618,7 +1282,7 @@ function loadOrders() {
                             );
 
                         heading.textContent =
-                            "📦 THÔNG TIN GIAO HÀNG";
+                            "🚚 THÔNG TIN NHẬN HÀNG";
 
 
                         const name =
@@ -668,15 +1332,15 @@ function loadOrders() {
                         );
 
 
-                        orderDiv.appendChild(
+                        item.appendChild(
                             shipping
                         );
 
                     }
 
 
-                    ordersBox.appendChild(
-                        orderDiv
+                    box.appendChild(
+                        item
                     );
 
                 }
@@ -684,7 +1348,7 @@ function loadOrders() {
 
         },
 
-        (error) => {
+        error => {
 
             console.error(error);
 
@@ -700,40 +1364,31 @@ function loadOrders() {
 }
 
 
-// ================================
-// ĐỔI TÊN TRẠNG THÁI
-// ================================
+// ==================================================
+// STATUS
+// ==================================================
 
-function getStatusText(status) {
+function statusText(status) {
 
     if (
         status ===
         "waiting_payment"
-    ) {
-
+    )
         return "⏳ Chờ thanh toán";
-
-    }
 
 
     if (
         status ===
         "paid"
-    ) {
-
+    )
         return "✅ Đã thanh toán";
-
-    }
 
 
     if (
         status ===
         "shipping_info_submitted"
-    ) {
-
+    )
         return "📦 Đã nhận thông tin giao hàng";
-
-    }
 
 
     return status || "Không xác định";
